@@ -259,12 +259,14 @@ class Csbn_Events_Admin {
 		$event_date = get_post_meta($post->ID, '_csbn_event_date_key', true);
 		$event_time = get_post_meta($post->ID, '_csbn_event_time_key', true);
 		?>
+        <div class="csbn_input">
 		Event Date:<br>
-		<input type="text" name="event_date" value="<?= $event_date ?>">
+		<input type="text" name="event_date" value="<?= (!empty($event_date)) ? $event_date : '' ?>">
 		<br>
 		Event Time:<br>
-		<input type="text" name="event_time" value="<?= $event_time ?>">
+		<input type="text" name="event_time" value="<?= (!empty($event_time)) ? $event_time : '' ?>">
 		<br><br>
+        </div>
 		<?php
 	}
 
@@ -273,21 +275,23 @@ class Csbn_Events_Admin {
 		$last_name = get_post_meta($post->ID, '_csbn_patron_last_name_key', true);
 		$email_address = get_post_meta($post->ID, '_csbn_patron_email_address_key', true);
 		?>
+        <div class="csbn_input">
 		First Name:<br>
-		<input type="text" name="first_name" value="<?= $first_name ?>">
+		<input type="text" name="first_name" value="<?= (!empty($first_name)) ? $first_name : '' ?>">
 		<br>
 		Last Name:<br>
-		<input type="text" name="last_name" value="<?= $last_name ?>">
+		<input type="text" name="last_name" value="<?= (!empty($last_name)) ? $last_name : '' ?>">
 		<br>
 		Email Address:<br>
-		<input type="text" name="email_address" value="<?= $email_address ?>">
+		<input type="text" name="email_address" value="<?= (!empty($email_address)) ? $email_address : '' ?>">
 		<br><br>
+        </div>
 		<?php
 	}
 
 
 	public function persist_events_meta_box_data($post_id) {
-		if (array_key_exists('_csbn_event_date_key', $_POST)) {
+		if (array_key_exists('event_date', $_POST)) {
 			update_post_meta(
 				$post_id,
 				'_csbn_event_date_key',
@@ -295,7 +299,7 @@ class Csbn_Events_Admin {
 			);
 		}
 
-		if (array_key_exists('_csbn_event_time_key', $_POST)) {
+		if (array_key_exists('event_time', $_POST)) {
 			update_post_meta(
 				$post_id,
 				'_csbn_event_time_key',
