@@ -100,7 +100,11 @@ class Csbn_Events_Public {
 
 	}
 
-	public function shortcode_function() {
+	public function show_event_checkin() {
+		return 'Test the plugin';
+	}
+
+	public function show_event_raffle() {
 		return 'Test the plugin';
 	}
 

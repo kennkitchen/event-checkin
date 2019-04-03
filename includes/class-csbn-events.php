@@ -166,6 +166,11 @@ class Csbn_Events {
 		$this->loader->add_action('save_post', $plugin_admin, 'persist_events_meta_box_data' );
 		$this->loader->add_action('save_post', $plugin_admin, 'persist_patrons_meta_box_data' );
 
+		$this->loader->add_filter('manage_edit-cpt_event_columns', $plugin_admin, 'events_custom_columns' );
+		$this->loader->add_filter('manage_edit-cpt_patron_columns', $plugin_admin, 'patrons_custom_columns' );
+
+		$this->loader->add_action('manage_posts_custom_column', $plugin_admin, 'custom_column_data', 10, 2 );
+
 	}
 
 	/**
@@ -182,7 +187,8 @@ class Csbn_Events {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		$this->loader->add_shortcode( 'testcode', $plugin_public, 'shortcode_function' );
+		$this->loader->add_shortcode( 'event_checkin', $plugin_public, 'show_event_checkin' );
+		$this->loader->add_shortcode( 'event_raffle', $plugin_public, 'show_event_raffle' );
 
 	}
 

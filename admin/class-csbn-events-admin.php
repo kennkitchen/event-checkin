@@ -255,6 +255,12 @@ class Csbn_Events_Admin {
 
 	}
 
+	/**
+	 * Draw the Events meta box.
+	 *
+	 * @since    1.0.0
+     * @param    object    $post       The current post.
+	 */
 	public function events_custom_box_html($post) {
 		$event_date = get_post_meta($post->ID, '_csbn_event_date_key', true);
 		$event_time = get_post_meta($post->ID, '_csbn_event_time_key', true);
@@ -270,6 +276,32 @@ class Csbn_Events_Admin {
 		<?php
 	}
 
+	public function events_custom_columns($columns) {
+	    //$new_columns = $columns;
+
+		$new_columns['cb'] = '<input type="checkbox" />';
+
+		//$new_columns['id'] = __('ID');
+		$new_columns['title'] = _x('Event Name', 'column name');
+		$new_columns['event_date'] = _x('Event Date', 'column name');
+		//$new_columns['images'] = __('Images');
+		$new_columns['event_time'] = _x('Event Time', 'column name');
+
+		$new_columns['categories'] = __('Categories');
+		$new_columns['tags'] = __('Tags');
+
+		$new_columns['date'] = _x('Date', 'column name');
+
+		return $new_columns;
+
+	}
+
+	/**
+	 * Draw the Patrons meta box.
+	 *
+	 * @since    1.0.0
+     * @param    object    $post       The current post.
+	 */
 	public function patrons_custom_box_html($post) {
 		$first_name = get_post_meta($post->ID, '_csbn_patron_first_name_key', true);
 		$last_name = get_post_meta($post->ID, '_csbn_patron_last_name_key', true);
@@ -289,7 +321,55 @@ class Csbn_Events_Admin {
 		<?php
 	}
 
+	public function patrons_custom_columns($columns) {
+		//$new_columns = $columns;
 
+		$new_columns['cb'] = '<input type="checkbox" />';
+
+		//$new_columns['id'] = __('ID');
+		$new_columns['title'] = _x('Display Name', 'column name');
+		$new_columns['first_name'] = _x('First Name', 'column name');
+		//$new_columns['images'] = __('Images');
+		$new_columns['last_name'] = _x('Last Name', 'column name');
+		$new_columns['email_address'] = _x('Email', 'column name');
+
+		$new_columns['categories'] = __('Categories');
+		$new_columns['tags'] = __('Tags');
+
+		$new_columns['date'] = _x('Date', 'column name');
+
+		return $new_columns;
+
+    }
+
+    public function custom_column_data($column_name, $post_ID) {
+
+	    switch ($column_name) {
+		    case 'event_date':
+			    echo get_post_meta($post_ID, '_csbn_event_date_key', true);
+			    break;
+		    case 'event_time':
+			    echo get_post_meta($post_ID, '_csbn_event_time_key', true);
+			    break;
+		    case 'first_name':
+			    echo get_post_meta($post_ID, '_csbn_patron_first_name_key', true);
+			    break;
+		    case 'last_name':
+			    echo get_post_meta($post_ID, '_csbn_patron_last_name_key', true);
+			    break;
+		    case 'email_address':
+			    echo get_post_meta($post_ID, '_csbn_patron_email_address_key', true);
+			    break;
+	    }
+
+    }
+
+	/**
+	 * Save the Events meta box.
+	 *
+	 * @since    1.0.0
+     * @param    int    $post_id       The current post ID.
+	 */
 	public function persist_events_meta_box_data($post_id) {
 		if (array_key_exists('event_date', $_POST)) {
 			update_post_meta(
@@ -309,8 +389,14 @@ class Csbn_Events_Admin {
 
 	}
 
+	/**
+	 * Save the Patrons meta box.
+	 *
+	 * @since    1.0.0
+     * @param    int    $post_id       The current post ID.
+	 */
 	public function persist_patrons_meta_box_data($post_id) {
-		if (array_key_exists('_csbn_patron_first_name_key', $_POST)) {
+		if (array_key_exists('first_name', $_POST)) {
 			update_post_meta(
 				$post_id,
 				'_csbn_patron_first_name_key',
@@ -318,7 +404,7 @@ class Csbn_Events_Admin {
 			);
 		}
 
-		if (array_key_exists('_csbn_patron_last_name_key', $_POST)) {
+		if (array_key_exists('last_name', $_POST)) {
 			update_post_meta(
 				$post_id,
 				'_csbn_patron_last_name_key',
@@ -326,7 +412,7 @@ class Csbn_Events_Admin {
 			);
 		}
 
-		if (array_key_exists('_csbn_patron_email_address_key', $_POST)) {
+		if (array_key_exists('email_address', $_POST)) {
 			update_post_meta(
 				$post_id,
 				'_csbn_patron_email_address_key',
