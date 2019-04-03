@@ -74,6 +74,8 @@ class Csbn_Events_Admin {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/csbn-events-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style('jquery-ui-css', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css');
+
 
 	}
 
@@ -97,8 +99,16 @@ class Csbn_Events_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/csbn-events-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script('jquery-ui-datepicker');
 
 	}
+
+	public function jquery_loader() {
+
+		//wp_enqueue_script( 'jquery' );
+		//wp_enqueue_script( 'jquery-ui-datepicker' );
+		//wp_enqueue_script( 'jquery-ui-smoothness' );
+    }
 
 	/**
 	 * Register the Events custom post type.
@@ -147,6 +157,7 @@ class Csbn_Events_Admin {
 			'show_ui'               => true,
 			'show_in_menu'          => true,
 			'menu_position'         => 5,
+			'menu_icon'             => 'dashicons-tickets-alt',
 			'show_in_admin_bar'     => true,
 			'show_in_nav_menus'     => true,
 			'can_export'            => true,
@@ -225,6 +236,7 @@ class Csbn_Events_Admin {
 			'show_ui'               => true,
 			'show_in_menu'          => true,
 			'menu_position'         => 5,
+			'menu_icon'             => 'dashicons-groups',
 			'show_in_admin_bar'     => true,
 			'show_in_nav_menus'     => true,
 			'can_export'            => true,
@@ -267,7 +279,7 @@ class Csbn_Events_Admin {
 		?>
         <div class="csbn_input">
 		Event Date:<br>
-		<input type="text" name="event_date" value="<?= (!empty($event_date)) ? $event_date : '' ?>">
+		<input type="text" name="event_date" class="jqdatepicker" value="<?= (!empty($event_date)) ? $event_date : '' ?>">
 		<br>
 		Event Time:<br>
 		<input type="text" name="event_time" value="<?= (!empty($event_time)) ? $event_time : '' ?>">

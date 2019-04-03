@@ -171,6 +171,8 @@ class Csbn_Events {
 
 		$this->loader->add_action('manage_posts_custom_column', $plugin_admin, 'custom_column_data', 10, 2 );
 
+		$this->loader->add_filter('admin_enqueue_scripts', $plugin_admin,'jquery_loader');
+
 	}
 
 	/**

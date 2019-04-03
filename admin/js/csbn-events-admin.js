@@ -1,6 +1,9 @@
 (function( $ ) {
 	'use strict';
 
+    $(document).ready(function() {
+        $( ".jqdatepicker" ).datepicker();
+    } );
 	/**
 	 * All of the code for your admin-facing JavaScript source
 	 * should reside in this file.
@@ -30,3 +33,9 @@
 	 */
 
 })( jQuery );
+
+/*
+jQuery(document).ready(function() {
+    jQuery( ".jqdatepicker" ).datepicker();
+} );
+*/
