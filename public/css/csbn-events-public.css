@@ -2,3 +2,32 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+.csbn_button {
+    background-color: white;
+    border: 2px solid #000000;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.csbn_smbutton {
+    background-color: white;
+    border: 2px solid #000000;
+    color: black;
+    padding: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.csbn_button1 {border-radius: 2px;}
+.csbn_button2 {border-radius: 4px;}
+.csbn_button3 {border-radius: 8px;}
+.csbn_button4 {border-radius: 12px;}
+.csbn_button5 {border-radius: 50%;}

@@ -146,7 +146,7 @@ class Csbn_Events_Public {
 				$prior_letter = $current_letter;
 				$current_letter = substr($this_patron, 0, 1);
 				if ($prior_letter != "-") {
-					$screen .= '<p><a href="#actions-sidebar">Back to Top</a></p>';
+					$screen .= '<p><button class="csbn_button csbn_button4"><a href="#actions-sidebar">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
 				}
 				$screen .= '<a name="' . $current_letter . '" class="title">' . strtoupper($current_letter) . '</a>';
 			}
@@ -155,7 +155,7 @@ class Csbn_Events_Public {
 			}
 			if ($this_patron != $patron->post_title) {
 				$screen .= <<<EOT
-<p>$patron_display_name ($patron_email_address) <input type="checkbox" name="" value="checked"><br></p>
+<p>$patron_display_name ($patron_email_address) <button class="csbn_smbutton csbn_button2">Checkin</button><br></p>
 EOT;
 				$patron_first_name =  "";
 				$patron_last_name =  "";
@@ -180,7 +180,7 @@ EOT;
 		$screen .= <<<EOT
 <p>$patron_display_name ($patron_email_address) <input type="checkbox" name="" value="checked"><br></p>
 EOT;
-		$screen .= '<p><a href="#actions-sidebar">Back to Top</a></p>';
+		$screen .= '<p><button class="csbn_button csbn_button4"><a href="#actions-sidebar">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
 		$screen .= "</div>";
 
 
