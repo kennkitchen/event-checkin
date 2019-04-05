@@ -101,7 +101,90 @@ class Csbn_Events_Public {
 	}
 
 	public function show_event_checkin() {
-		return 'Test the plugin';
+		global $wpdb;
+
+		$events = $wpdb->get_results(
+			$wpdb->prepare(
+				"select p.ID, p.post_title, pm.meta_key, pm.meta_value " .
+				"from " . $wpdb->prefix . "posts p, " . $wpdb->prefix . "postmeta pm " .
+				"where p.post_type = 'cpt_event' and p.post_status = 'publish' " .
+				"and pm.post_id = p.ID and pm.meta_key like '_csbn%' " .
+				"order by p.post_title", null
+			)
+		);
+
+		$patrons = $wpdb->get_results(
+			$wpdb->prepare(
+				"select p.ID, p.post_title, pm.meta_key, pm.meta_value " .
+				"from " . $wpdb->prefix . "posts p, " . $wpdb->prefix . "postmeta pm " .
+				"where p.post_type = 'cpt_patron' and p.post_status = 'publish' " .
+				"and pm.post_id = p.ID and pm.meta_key like '_csbn%' " .
+				"order by p.post_title", null
+			)
+		);
+
+		// create letters row
+		$screen = "<div>";
+
+		for ($x = 'A'; $x < 'Z'; $x++) {
+			$screen .= '<a href="#' . $x . '"> ' . $x . '</a>' . ' - ';
+		}
+		$screen .= '<a href="#Z">Z</a>';
+		$screen .= "</div><br />";
+
+		// initialize contacts section
+		$screen .= "<div>";
+		$this_patron = "-first";
+
+		$current_letter = "-";
+		$prior_letter = "";
+
+		$patron_display_name = $patron_first_name = $patron_last_name = $patron_email_address = "";
+
+		foreach ($patrons as $patron) {
+			if ( substr($this_patron, 0, 1) != $current_letter ) {
+				$prior_letter = $current_letter;
+				$current_letter = substr($this_patron, 0, 1);
+				if ($prior_letter != "-") {
+					$screen .= '<p><a href="#actions-sidebar">Back to Top</a></p>';
+				}
+				$screen .= '<a name="' . $current_letter . '" class="title">' . strtoupper($current_letter) . '</a>';
+			}
+			if ($this_patron == "-first") {
+				$this_patron = $patron->post_title;
+			}
+			if ($this_patron != $patron->post_title) {
+				$screen .= <<<EOT
+<p>$patron_display_name ($patron_email_address) <input type="checkbox" name="" value="checked"><br></p>
+EOT;
+				$patron_first_name =  "";
+				$patron_last_name =  "";
+				$patron_email_address = "";
+				$this_patron = $patron->post_title;
+			} else {
+				$patron_display_name = $patron->post_title;
+				switch ($patron->meta_key) {
+					case "_csbn_patron_first_name_key":
+						$patron_first_name = $patron->meta_value;
+						break;
+					case "_csbn_patron_last_name_key":
+						$patron_last_name = $patron->meta_value;
+						break;
+					case "_csbn_patron_email_address_key":
+						$patron_email_address = $patron->meta_value;
+						break;
+				}
+			}
+		}
+
+		$screen .= <<<EOT
+<p>$patron_display_name ($patron_email_address) <input type="checkbox" name="" value="checked"><br></p>
+EOT;
+		$screen .= '<p><a href="#actions-sidebar">Back to Top</a></p>';
+		$screen .= "</div>";
+
+
+		return $screen;
 	}
 
 	public function show_event_raffle() {

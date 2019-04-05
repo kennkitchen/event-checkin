@@ -103,13 +103,6 @@ class Csbn_Events_Admin {
 
 	}
 
-	public function jquery_loader() {
-
-		//wp_enqueue_script( 'jquery' );
-		//wp_enqueue_script( 'jquery-ui-datepicker' );
-		//wp_enqueue_script( 'jquery-ui-smoothness' );
-    }
-
 	/**
 	 * Register the Events custom post type.
 	 *
