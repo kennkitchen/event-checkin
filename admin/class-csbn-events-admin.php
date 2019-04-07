@@ -446,10 +446,16 @@ class Csbn_Events_Admin {
 		        "INSERT INTO " . $wpdb->prefix . "csbn_event_history " .
                 "(event_id, patron_id, attended, prize_awarded, created, modified) " .
                 "VALUES (%d, %d, %s, %s, %s, %s)",
-                1, 1, 1, 1, $now, $now);
+			    $checkinData['event_id'],
+			    $checkinData1['patron_id'],
+                1,
+                0,
+                $now,
+                $now);
+
 		$wpdb->query($sql);
 
-		echo "you are here.";
+//		echo "you are here.";
 
 	}
 }

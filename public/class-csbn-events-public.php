@@ -105,7 +105,13 @@ class Csbn_Events_Public {
 
 		$events = $wpdb->get_results(
 			$wpdb->prepare(
-				"select p.ID, p.post_title, pm.meta_key, pm.meta_value " .
+				"select distinct p.ID, p.post_title, " .
+					"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+					"where pm.meta_key = '_csbn_event_date_key' " .
+					"and pm.post_id = p.ID) csbn_event_date_key, " .
+					"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+					"where pm.meta_key = '_csbn_event_time_key' " .
+					"and pm.post_id = p.ID) csbn_event_time_key " .
 				"from " . $wpdb->prefix . "posts p, " . $wpdb->prefix . "postmeta pm " .
 				"where p.post_type = 'cpt_event' and p.post_status = 'publish' " .
 				"and pm.post_id = p.ID and pm.meta_key like '_csbn%' " .
@@ -113,36 +119,35 @@ class Csbn_Events_Public {
 			)
 		);
 
-		$event_display_name = $event_date = $event_time = "";
+		$screen = '<div id="container">';
+		$screen .= '<label for="selected_event">For Event:</label>';
+		$screen .= '<select name="selected_event">';
 
 		foreach ($events as $event) {
-			if ($event_display_name == "") {
-				$event_display_name = $event->post_title;
-			}
-			$event_display_name = $event->post_title;
-			switch ($event->meta_key) {
-				case "_csbn_event_date_key":
-					$event_date = strtotime($event->meta_value);
-					break;
-				case "_csbn_event_time_key":
-					$event_time = $event->meta_value;
-					break;
-			}
+			$screen .= '<option value="' . $event->ID . '">' . $event->post_title . '</option>';
 		}
+		$screen .= '</select><br /><br />';
 
 		$patrons = $wpdb->get_results(
 			$wpdb->prepare(
-				"select p.ID, p.post_title, pm.meta_key, pm.meta_value " .
+				"select distinct p.ID, p.post_title, " .
+					"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+					"where pm.meta_key = '_csbn_patron_first_name_key' " .
+					"and pm.post_id = p.ID) csbn_patron_first_name_key, " .
+					"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+					"where pm.meta_key = '_csbn_patron_last_name_key' " .
+					"and pm.post_id = p.ID) csbn_patron_last_name_key, " .
+					"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+					"where pm.meta_key = '_csbn_patron_email_address_key' " .
+					"and pm.post_id = p.ID) csbn_patron_email_address_key " .
 				"from " . $wpdb->prefix . "posts p, " . $wpdb->prefix . "postmeta pm " .
-				"where p.post_type = 'cpt_patron' and p.post_status = 'publish' " .
-				"and pm.post_id = p.ID and pm.meta_key like '_csbn%' " .
+				"where p.post_type = 'cpt_patron' and p.post_status = 'publish'" .
+				"and pm.post_id = p.ID and pm.meta_key like '_csbn%'" .
 				"order by p.post_title", null
 			)
 		);
 
 		// create letters row
-		$screen = '<div id="container">';
-
 		for ($x = 'A'; $x < 'Z'; $x++) {
 			$screen .= '<a href="#' . $x . '"> ' . $x . '</a>' . ' - ';
 		}
@@ -151,55 +156,27 @@ class Csbn_Events_Public {
 
 		// initialize contacts section
 		$screen .= "<div>";
-		$this_patron = "-first";
 
 		$current_letter = "-";
-		$prior_letter = "";
-
-		$patron_display_name = $patron_first_name = $patron_last_name = $patron_email_address = "";
+		$prior_letter = "-";
 
 		foreach ($patrons as $patron) {
-			if ( substr($this_patron, 0, 1) != $current_letter ) {
-				$prior_letter = $current_letter;
-				$current_letter = substr($this_patron, 0, 1);
+			$current_letter = substr($patron->post_title, 0, 1);
+			if ($current_letter != $prior_letter) {
 				if ($prior_letter != "-") {
 					$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
 				}
 				$screen .= '<a name="' . $current_letter . '" class="title">' . strtoupper($current_letter) . '</a>';
 			}
-			if ($this_patron == "-first") {
-				$this_patron = $patron->post_title;
-			}
-			if ($this_patron != $patron->post_title) {
-				$screen .= <<<EOT
-<p><button id="target" value="checkin:$patron_email_address" class="csbn_smbutton csbn_button2">Checkin</button> $patron_display_name ($patron_email_address)<br></p>
+			$prior_letter = $current_letter;
+			$screen .= <<<EOT
+<p><button id="target" value="checkin:$patron->csbn_patron_email_address_key:$patron->ID:event_id" class="csbn_smbutton csbn_button2">Checkin</button> $patron->post_title ($patron->csbn_patron_email_address_key)<br></p>
 EOT;
-				$patron_first_name =  "";
-				$patron_last_name =  "";
-				$patron_email_address = "";
-				$this_patron = $patron->post_title;
-			} else {
-				$patron_display_name = $patron->post_title;
-				switch ($patron->meta_key) {
-					case "_csbn_patron_first_name_key":
-						$patron_first_name = $patron->meta_value;
-						break;
-					case "_csbn_patron_last_name_key":
-						$patron_last_name = $patron->meta_value;
-						break;
-					case "_csbn_patron_email_address_key":
-						$patron_email_address = $patron->meta_value;
-						break;
-				}
-			}
 		}
 
-		$screen .= <<<EOT
-<p><button id="target" value="checkin:$patron_email_address" class="csbn_smbutton csbn_button2">Checkin</button> $patron_display_name ($patron_email_address)<br></p>
-EOT;
 		$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
-		$screen .= "</div>";
 
+		$screen .= "</div>";
 
 		return $screen;
 	}
