@@ -113,6 +113,23 @@ class Csbn_Events_Public {
 			)
 		);
 
+		$event_display_name = $event_date = $event_time = "";
+
+		foreach ($events as $event) {
+			if ($event_display_name == "") {
+				$event_display_name = $event->post_title;
+			}
+			$event_display_name = $event->post_title;
+			switch ($event->meta_key) {
+				case "_csbn_event_date_key":
+					$event_date = strtotime($event->meta_value);
+					break;
+				case "_csbn_event_time_key":
+					$event_time = $event->meta_value;
+					break;
+			}
+		}
+
 		$patrons = $wpdb->get_results(
 			$wpdb->prepare(
 				"select p.ID, p.post_title, pm.meta_key, pm.meta_value " .
@@ -124,7 +141,7 @@ class Csbn_Events_Public {
 		);
 
 		// create letters row
-		$screen = "<div>";
+		$screen = '<div id="container">';
 
 		for ($x = 'A'; $x < 'Z'; $x++) {
 			$screen .= '<a href="#' . $x . '"> ' . $x . '</a>' . ' - ';
@@ -146,7 +163,7 @@ class Csbn_Events_Public {
 				$prior_letter = $current_letter;
 				$current_letter = substr($this_patron, 0, 1);
 				if ($prior_letter != "-") {
-					$screen .= '<p><button class="csbn_button csbn_button4"><a href="#actions-sidebar">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
+					$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
 				}
 				$screen .= '<a name="' . $current_letter . '" class="title">' . strtoupper($current_letter) . '</a>';
 			}
@@ -155,7 +172,7 @@ class Csbn_Events_Public {
 			}
 			if ($this_patron != $patron->post_title) {
 				$screen .= <<<EOT
-<p>$patron_display_name ($patron_email_address) <button class="csbn_smbutton csbn_button2">Checkin</button><br></p>
+<p><button id="target" value="checkin:$patron_email_address" class="csbn_smbutton csbn_button2">Checkin</button> $patron_display_name ($patron_email_address)<br></p>
 EOT;
 				$patron_first_name =  "";
 				$patron_last_name =  "";
@@ -178,9 +195,9 @@ EOT;
 		}
 
 		$screen .= <<<EOT
-<p>$patron_display_name ($patron_email_address) <input type="checkbox" name="" value="checked"><br></p>
+<p><button id="target" value="checkin:$patron_email_address" class="csbn_smbutton csbn_button2">Checkin</button> $patron_display_name ($patron_email_address)<br></p>
 EOT;
-		$screen .= '<p><button class="csbn_button csbn_button4"><a href="#actions-sidebar">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
+		$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
 		$screen .= "</div>";
 
 

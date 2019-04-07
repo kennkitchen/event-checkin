@@ -29,4 +29,30 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+    $(function(){
+        $('button').click(function(){
+            // You need to get the attribute from the element
+            //window.alert( "Handler for .click() called." + $(this).attr('value'));
+            event.preventDefault();
+            var formData = $(this).attr('value');
+            $.ajax({
+                url: '/wp-json/csbn-events/v1/checkin',
+                type: 'POST',
+                data: formData,
+                async: true,
+                success: function(data) {
+                    alert(data);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        });
+    });
+
 })( jQuery );
+/*
+function myFunction(displayName) {
+    window.alert( "Handler for .click() called." + displayName);
+}
+*/

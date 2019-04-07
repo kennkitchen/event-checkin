@@ -42,6 +42,8 @@ class Csbn_Events_Activator {
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     		event_id INT UNSIGNED,
     		patron_id INT UNSIGNED,
+    		attended BOOLEAN DEFAULT FALSE,
+    		prize_awarded BOOLEAN DEFAULT FALSE,
             created DATETIME DEFAULT NULL,
             modified DATETIME DEFAULT NULL,
     		INDEX ndx_event_id (event_id),

@@ -425,4 +425,31 @@ class Csbn_Events_Admin {
 			);
 		}
 	}
+
+	public function custom_api_endpoint() {
+		register_rest_route( 'csbn-events/v1', '/checkin', // /(?P<userid>\d+)/(?P<eventid>\d+)
+			array(
+				'methods'  => 'POST',
+				'callback' => [$this, 'api_user_checkin'],
+			)
+		);
+	}
+
+	public function api_user_checkin($formData) {
+		global $wpdb;
+
+		$now = new DateTime();
+
+	    $checkinData = explode(":", $formData['body']);
+
+		$sql = $wpdb->prepare(
+		        "INSERT INTO " . $wpdb->prefix . "csbn_event_history " .
+                "(event_id, patron_id, attended, prize_awarded, created, modified) " .
+                "VALUES (%d, %d, %s, %s, %s, %s)",
+                1, 1, 1, 1, $now, $now);
+		$wpdb->query($sql);
+
+		echo "you are here.";
+
+	}
 }

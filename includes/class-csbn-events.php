@@ -173,6 +173,8 @@ class Csbn_Events {
 
 		//$this->loader->add_filter('admin_enqueue_scripts', $plugin_admin,'jquery_loader');
 
+		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'custom_api_endpoint' );
+
 	}
 
 	/**
