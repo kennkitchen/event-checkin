@@ -169,7 +169,7 @@ class Csbn_Events {
 		$this->loader->add_filter('manage_edit-cpt_event_columns', $plugin_admin, 'events_custom_columns' );
 		$this->loader->add_filter('manage_edit-cpt_patron_columns', $plugin_admin, 'patrons_custom_columns' );
 
-		$this->loader->add_filter('template_include', $plugin_admin, 'csbn_template_loader' );
+		//$this->loader->add_filter('template_include', $plugin_admin, 'csbn_template_loader' );
 
 		$this->loader->add_action('manage_posts_custom_column', $plugin_admin, 'custom_column_data', 10, 2 );
 

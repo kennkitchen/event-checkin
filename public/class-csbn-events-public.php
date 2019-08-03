@@ -100,12 +100,18 @@ class Csbn_Events_Public {
 
 	}
 
+	/**
+	 * Displays the event checkin page.
+	 *
+	 * @since    1.0.0
+	 */
 	public function show_event_checkin() {
 		global $wp, $wp_query, $wpdb;
 
 		$this_page = home_url(add_query_arg(array(), $wp->request));
 		$parameter_string = $wp_query->get('custom-form', null);
 
+		// on initial entry, show event list for selection
 		if ((!$parameter_string) || ('initial' == $parameter_string)) {
 			$event_add_meta_nonce = wp_create_nonce( 'event_add_meta_form_nonce' );
 
@@ -144,7 +150,7 @@ EOT;
 	</form> 
 EOT;
 
-
+		// after event is selected, show the main screen
 		} elseif ($parameter_string) {
 			$patrons = $wpdb->get_results(
 					"select distinct p.ID, p.post_title, " .
@@ -166,7 +172,9 @@ EOT;
 				. $wpdb->prefix . "posts p " . "where p.post_type = 'cpt_event' "
 				. "and p.ID = '" . $parameter_string . "'" );
 
-			$screen = '<h2>Checkin for Event: ' . $event_name . '</h2><br />';
+			$screen = '<h2 id="header">Checkin for Event: ' . $event_name . '</h2><br />';
+			$screen .= '<input type="hidden" id="event_id" name="event_id" value="'
+				. $parameter_string . '">';
 
 			// create letters row
 			for ($x = 'A'; $x < 'Z'; $x++) {
@@ -185,7 +193,7 @@ EOT;
 				$current_letter = substr($patron->post_title, 0, 1);
 				if ($current_letter != $prior_letter) {
 					if ($prior_letter != "-") {
-						$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#actions-sidebar">Add New</a></button></p>';
+						$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#addnew">Add New</a></button></p>';
 					}
 					$screen .= '<h3><a name="' . $current_letter . '" class="title">' . strtoupper($current_letter) . '</a></h3>';
 				}
@@ -195,9 +203,9 @@ EOT;
 EOT;
 			}
 
-			$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button></p>';
-			$screen .= '<hr><input type="text" name="add_fname" placeholder="First Name"/> <input type="text" name="add_lname" placeholder="Last Name"/> <input type="text" name="add_email" placeholder="Email"/><br />';
-			$screen .= '<button id="addnew" class="csbn_button csbn_button4">Add New</button>';
+			$screen .= '<p><form><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button></p>';
+			$screen .= '<hr><input type="text" id="fname" name="add_fname" placeholder="First Name"/> <input type="text" id="lname" name="add_lname" placeholder="Last Name"/> <input type="text" id="email" name="add_email" placeholder="Email"/><br />';
+			$screen .= '<button id="addnew" class="csbn_button csbn_button4">Add New</button></form>';
 			$screen .= "</div>";
 
 		}
@@ -218,6 +226,12 @@ EOT;
 		return $screen;
 	}
 
+	/**
+	 * Fires when the submit button is clicked to select an event from the
+	 * event checkin page dropdown.
+	 *
+	 * @since    1.0.0
+	 */
 	public function event_form_response() {
 		global $wp, $wpdb;
 

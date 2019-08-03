@@ -433,12 +433,19 @@ class Csbn_Events_Admin {
 				'callback' => [$this, 'api_user_checkin'],
 			)
 		);
+
+		register_rest_route( 'csbn-events/v1', '/addnew', // /(?P<userid>\d+)/(?P<eventid>\d+)
+			array(
+				'methods'  => 'POST',
+				'callback' => [$this, 'api_user_addnew'],
+			)
+		);
 	}
 
 	public function api_user_checkin($formData) {
 		global $wpdb;
 
-		$now = new DateTime();
+		$now = date('Y-m-d G:i:s'); //new DateTime();
 
 		$body = $formData->get_body();
 
@@ -457,10 +464,61 @@ class Csbn_Events_Admin {
 
 		$wpdb->query($sql);
 
-//		echo "you are here.";
-
 	}
 
+	public function api_user_addnew($formData) {
+		global $wpdb;
+
+		$now = date('Y-m-d G:i:s'); //new DateTime();
+
+		$body = $formData->get_body();
+
+		$patronData = explode(":", $body);
+
+		$new_patron = array(
+			'post_title'    => $patronData[0] . ' ' . $patronData[1],
+			'post_content'  => null,
+			'post_status'   => 'publish',
+            'post_type'     => 'cpt_patron'
+		);
+
+		$new_patron_id = wp_insert_post( $new_patron );
+
+		add_post_meta(
+		        $new_patron_id,
+                '_csbn_patron_first_name_key',
+			    $patronData[0],
+                false );
+
+		add_post_meta(
+			$new_patron_id,
+			'_csbn_patron_last_name_key',
+			$patronData[1],
+			false );
+
+		add_post_meta(
+			$new_patron_id,
+			'_csbn_patron_email_address_key',
+			$patronData[2],
+			false );
+
+		$sql = $wpdb->prepare(
+			"INSERT INTO " . $wpdb->prefix . "csbn_event_history " .
+			"(event_id, patron_id, attended, prize_awarded, created, modified) " .
+			"VALUES (%d, %d, %s, %s, %s, %s)",
+			$patronData[3],
+			$new_patron_id,
+			1,
+			0,
+			$now,
+			$now);
+
+		$wpdb->query($sql);
+
+		return 'Added new patron: ' . $new_patron_id;
+	}
+
+	/*
 	public function csbn_template_loader( $template ) {
 
 		//$find = array();
@@ -474,12 +532,11 @@ class Csbn_Events_Admin {
             $file = $template;
 		endif;
 
-		/*
-		if ( file_exists( wcpt_locate_template( $file ) ) ) :
-			$template = wcpt_locate_template( $file );
-		endif;
-		*/
+//		if ( file_exists( wcpt_locate_template( $file ) ) ) :
+//			$template = wcpt_locate_template( $file );
+//		endif;
 
 		return $file; //$template;
 	}
+	*/
 }

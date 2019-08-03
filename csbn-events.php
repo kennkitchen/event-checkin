@@ -19,8 +19,8 @@
  * Version:           1.0.0
  * Author:            Kenneth Kitchen
  * Author URI:        https://kenneth.kitchen
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:           Copyright 2019 KMD Enterprises, LLC
+ * License URI:       https://kmd.enterprises
  * Text Domain:       csbn-events
  * Domain Path:       /languages
  */

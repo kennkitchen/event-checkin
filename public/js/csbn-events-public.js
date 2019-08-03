@@ -51,7 +51,26 @@
 
 		$('#addnew').click(function(){
 			event.preventDefault();
-			window.alert("Add new!");
+			//var formData = $(this).attr('value');
+			var formData = document.getElementById("fname").value
+				+ ':' + document.getElementById("lname").value
+				+ ':' + document.getElementById("email").value
+				+ ':' + document.getElementById("event_id").value;
+			$.ajax({
+				url: '/wp-json/csbn-events/v1/addnew',
+				type: 'POST',
+				data: formData,
+				async: true,
+				success: function(data) {
+					alert(data);
+				},
+				cache: false,
+				contentType: false,
+				processData: false
+			});
+			document.getElementById("fname").value = '';
+			document.getElementById("lname").value = '';
+			document.getElementById("email").value = '';
 		});
     });
 
