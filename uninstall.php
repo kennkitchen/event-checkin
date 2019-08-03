@@ -38,11 +38,13 @@ $charset_collate = $wpdb->get_charset_collate();
 
 $history_table_name = $wpdb->prefix . "csbn_event_history";
 
+/*
 $sql = "TRUNCATE TABLE " . $history_table_name;
 dbDelta($sql);
 
 $sql = "DROP TABLE " . $history_table_name;
 dbDelta($sql);
+*/
 
 // flush rewrite cache
 flush_rewrite_rules();
