@@ -30,7 +30,7 @@
 	 */
 
     $(function(){
-        $('button').click(function(){
+        $('.csbn_button2').click(function(){
             // You need to get the attribute from the element
             //window.alert( "Handler for .click() called." + $(this).attr('value'));
             event.preventDefault();
@@ -48,11 +48,18 @@
                 processData: false
             });
         });
+
+		$('#addnew').click(function(){
+			event.preventDefault();
+			window.alert("Add new!");
+		});
     });
+
 
 })( jQuery );
 /*
 function myFunction(displayName) {
     window.alert( "Handler for .click() called." + displayName);
 }
+
 */

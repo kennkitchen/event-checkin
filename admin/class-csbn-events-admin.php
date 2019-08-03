@@ -173,7 +173,7 @@ class Csbn_Events_Admin {
 		add_meta_box(
 			'event_meta_box',               // Unique ID
             'Events',       // Box title
-            [self::class, 'events_custom_box_html'], // Content callback
+            [$this, 'events_custom_box_html'], // Content callback
             'cpt_event',              // screen on which to show the box
             'normal',                // or 'side', 'advanced'
             'default',               // 'high', 'low'
@@ -251,7 +251,7 @@ class Csbn_Events_Admin {
 		add_meta_box(
 			'patron_meta_box',               // Unique ID
 			'Patrons',       // Box title
-			[self::class, 'patrons_custom_box_html'], // Content callback
+			[$this, 'patrons_custom_box_html'], // Content callback
 			'cpt_patron',              // screen on which to show the box
 			'normal',                // or 'side', 'advanced'
 			'default',               // 'high', 'low'
@@ -440,14 +440,16 @@ class Csbn_Events_Admin {
 
 		$now = new DateTime();
 
-	    $checkinData = explode(":", $formData['body']);
+		$body = $formData->get_body();
+
+	    $checkinData = explode(":", $body);
 
 		$sql = $wpdb->prepare(
 		        "INSERT INTO " . $wpdb->prefix . "csbn_event_history " .
                 "(event_id, patron_id, attended, prize_awarded, created, modified) " .
                 "VALUES (%d, %d, %s, %s, %s, %s)",
-			    $checkinData['event_id'],
-			    $checkinData1['patron_id'],
+			    $checkinData[3],
+			    $checkinData[2],
                 1,
                 0,
                 $now,
@@ -457,5 +459,27 @@ class Csbn_Events_Admin {
 
 //		echo "you are here.";
 
+	}
+
+	public function csbn_template_loader( $template ) {
+
+		//$find = array();
+		$file = plugin_dir_path( __FILE__ ) . 'partials/';
+
+		if ( is_singular( 'cpt_event' ) )  :
+			$file .= 'single-cpt_event.php';
+        elseif ( is_singular( 'cpt_patron' ) ) :
+			$file .= 'single-cpt_patron.php';
+        else :
+            $file = $template;
+		endif;
+
+		/*
+		if ( file_exists( wcpt_locate_template( $file ) ) ) :
+			$template = wcpt_locate_template( $file );
+		endif;
+		*/
+
+		return $file; //$template;
 	}
 }
