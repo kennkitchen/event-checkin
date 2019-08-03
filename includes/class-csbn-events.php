@@ -194,7 +194,7 @@ class Csbn_Events {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 		$this->loader->add_shortcode( 'event_checkin', $plugin_public, 'show_event_checkin' );
-		$this->loader->add_shortcode( 'event_raffle', $plugin_public, 'show_event_raffle' );
+		$this->loader->add_shortcode( 'event_history', $plugin_public, 'show_event_history' );
 
 		$this->loader->add_action( 'admin_post_event_form', $plugin_public, 'event_form_response' );
 	}

@@ -101,7 +101,7 @@ class Csbn_Events_Public {
 	}
 
 	/**
-	 * Displays the event checkin page.
+	 * Displays the event checkin page from the shortcode "event_checkin".
 	 *
 	 * @since    1.0.0
 	 */
@@ -263,6 +263,89 @@ EOT;
 			);
 		}
 
+	}
+
+	/**
+	 * event_history shortcode
+	 *
+	 * @since    1.0.0
+	 */
+	public function show_event_history() {
+		global $wp, $wp_query, $wpdb;
+
+		$this_page = home_url(add_query_arg(array(), $wp->request));
+		$parameter_string = $wp_query->get('custom-form', null);
+
+		// on initial entry, show event list for selection
+		if ((!$parameter_string) || ('initial' == $parameter_string)) {
+			$event_add_meta_nonce = wp_create_nonce( 'event_add_meta_form_nonce' );
+
+			$admin_url = esc_url( admin_url( 'admin-post.php?custom-form=initial' ) );
+
+			$events = $wpdb->get_results(
+				"select distinct p.ID, p.post_title, " .
+				"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+				"where pm.meta_key = '_csbn_event_date_key' " .
+				"and pm.post_id = p.ID) csbn_event_date_key, " .
+				"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+				"where pm.meta_key = '_csbn_event_time_key' " .
+				"and pm.post_id = p.ID) csbn_event_time_key " .
+				"from " . $wpdb->prefix . "posts p " .
+				"where p.post_type = 'cpt_event' and p.post_status = 'publish' " .
+				"order by p.post_title"
+			);
+
+			$screen = <<<EOT
+<div id="container">
+	<form action="$admin_url" method="post">
+		<input type="hidden" name="action" value="event_form">
+		<input type="hidden" name="event_add_meta_form_nonce" value="$event_add_meta_nonce" />
+		<input type="hidden" name="event_redirect_url" value="$this_page" />
+<label for="selected_event">For Event:</label><br />
+<select name="selected_event">
+EOT;
+
+			foreach ($events as $event) {
+				$screen .= '<option value="' . $event->ID . '">' . $event->post_title . '</option>';
+			}
+
+			$screen .= <<<EOT
+		</select><br /><br />
+		<input type="submit" value="Submit">
+	</form> 
+EOT;
+
+			// after event is selected, show the main screen
+		} elseif ($parameter_string) {
+			$event_name = $wpdb->get_var("select p.post_title from "
+			                             . $wpdb->prefix . "posts p " . "where p.post_type = 'cpt_event' "
+			                             . "and p.ID = '" . $parameter_string . "'" );
+
+			$screen = "<h2>Attendees for event: " . $event_name . "</h2><br />";
+			$patrons = $wpdb->get_results(
+				"select distinct p.ID, p.post_title, " .
+				"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+				"where pm.meta_key = '_csbn_patron_first_name_key' " .
+				"and pm.post_id = p.ID) csbn_patron_first_name_key, " .
+				"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+				"where pm.meta_key = '_csbn_patron_last_name_key' " .
+				"and pm.post_id = p.ID) csbn_patron_last_name_key, " .
+				"(select pm.meta_value from " . $wpdb->prefix . "postmeta pm " .
+				"where pm.meta_key = '_csbn_patron_email_address_key' " .
+				"and pm.post_id = p.ID) csbn_patron_email_address_key " .
+				"from " . $wpdb->prefix . "posts p, " . $wpdb->prefix . "csbn_event_history h " .
+				"where p.post_type = 'cpt_patron' and p.post_status = 'publish' " .
+				"and h.event_id = " . $parameter_string . " " .
+				"and h.patron_id = p.ID " .
+				"order by p.post_title"
+			);
+
+			foreach ($patrons as $patron) {
+				$screen .= "<p>" . $patron->post_title . "</p>";
+			}
+		}
+
+		return $screen;
 	}
 
 }

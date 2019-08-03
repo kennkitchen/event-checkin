@@ -464,6 +464,10 @@ class Csbn_Events_Admin {
 
 		$wpdb->query($sql);
 
+		return 'Patron ' . $checkinData[2] . ' has been checked in.';
+
+		wp_die();
+
 	}
 
 	public function api_user_addnew($formData) {
@@ -516,6 +520,8 @@ class Csbn_Events_Admin {
 		$wpdb->query($sql);
 
 		return 'Added new patron: ' . $new_patron_id;
+
+		wp_die();
 	}
 
 	/*
