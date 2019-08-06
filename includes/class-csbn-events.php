@@ -187,7 +187,6 @@ class Csbn_Events {
 	 * @access   private
 	 */
 	private function define_public_hooks() {
-
 		$plugin_public = new Csbn_Events_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
@@ -197,6 +196,8 @@ class Csbn_Events {
 		$this->loader->add_shortcode( 'event_history', $plugin_public, 'show_event_history' );
 
 		$this->loader->add_action( 'admin_post_event_form', $plugin_public, 'event_form_response' );
+
+		$this->loader->add_filter('query_vars', $plugin_public, 'add_query_vars_filter');
 	}
 
 	/**

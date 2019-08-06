@@ -60,20 +60,13 @@ class Csbn_Events_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
+		global $post;
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Csbn_Events_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Csbn_Events_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/csbn-events-public.css', array(), $this->version, 'all' );
+		if ((has_shortcode( $post->post_content, 'event_checkin'))
+			|| (has_shortcode( $post->post_content, 'event_history'))) {
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/csbn-events-public.css', array(), $this->version, 'all' );
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/w3.css', array(), $this->version, 'all' );
+		}
 
 	}
 
@@ -348,4 +341,8 @@ EOT;
 		return $screen;
 	}
 
+	public function add_query_vars_filter($vars) {
+		$vars[] = "custom-form";
+		return $vars;
+	}
 }
