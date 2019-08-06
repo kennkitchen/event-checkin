@@ -64,7 +64,7 @@ class Csbn_Events_Public {
 
 		if ((has_shortcode( $post->post_content, 'event_checkin'))
 			|| (has_shortcode( $post->post_content, 'event_history'))) {
-			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/csbn-events-public.css', array(), $this->version, 'all' );
+			//wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/csbn-events-public.css', array(), $this->version, 'all' );
 			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/w3.css', array(), $this->version, 'all' );
 		}
 
@@ -124,7 +124,7 @@ class Csbn_Events_Public {
 			);
 
 			$screen = <<<EOT
-<div id="container">
+<div id="w3-container">
 	<form action="$admin_url" method="post">
 		<input type="hidden" name="action" value="event_form">
 		<input type="hidden" name="event_add_meta_form_nonce" value="$event_add_meta_nonce" />
@@ -171,9 +171,9 @@ EOT;
 
 			// create letters row
 			for ($x = 'A'; $x < 'Z'; $x++) {
-				$screen .= '<a href="#' . $x . '"> ' . $x . '</a>' . ' - ';
+				$screen .= '<a href="#' . $x . '" class="w3-button w3-black w3-circle"> ' . $x . '</a>' . ' - ';
 			}
-			$screen .= '<a href="#Z">Z</a>';
+			$screen .= '<a href="#Z" class="w3-button w3-black w3-circle">Z</a>';
 			$screen .= "</div><br />";
 
 			// initialize contacts section
@@ -186,19 +186,19 @@ EOT;
 				$current_letter = substr($patron->post_title, 0, 1);
 				if ($current_letter != $prior_letter) {
 					if ($prior_letter != "-") {
-						$screen .= '<p><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button> <button class="csbn_button csbn_button4"><a href="#addnew">Add New</a></button></p>';
+						$screen .= '<p><a href="#header" class="w3-button w3-black">Back to Top</a> <a href="#addnew" class="w3-button w3-black">Add New</a></p>';
 					}
 					$screen .= '<h3><a name="' . $current_letter . '" class="title">' . strtoupper($current_letter) . '</a></h3>';
 				}
 				$prior_letter = $current_letter;
 				$screen .= <<<EOT
-<p><button value="checkin:$patron->csbn_patron_email_address_key:$patron->ID:$parameter_string" class="csbn_smbutton csbn_button2">Checkin</button> $patron->post_title ($patron->csbn_patron_email_address_key)<br></p>
+<p><button value="checkin:$patron->csbn_patron_email_address_key:$patron->ID:$parameter_string" class="w3-button w3-small w3-black">Checkin</button> $patron->post_title ($patron->csbn_patron_email_address_key)<br></p>
 EOT;
 			}
 
-			$screen .= '<p><form><button class="csbn_button csbn_button4"><a href="#header">Back to Top</a></button></p>';
+			$screen .= '<p><form><a href="#header" class="w3-button w3-black">Back to Top</a></p>';
 			$screen .= '<hr><input type="text" id="fname" name="add_fname" placeholder="First Name"/> <input type="text" id="lname" name="add_lname" placeholder="Last Name"/> <input type="text" id="email" name="add_email" placeholder="Email"/><br />';
-			$screen .= '<button id="addnew" class="csbn_button csbn_button4">Add New</button></form>';
+			$screen .= '<button id="addnew" class="w3-button w3-black">Add New</button></form>';
 			$screen .= "</div>";
 
 		}
