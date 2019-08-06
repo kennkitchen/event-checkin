@@ -171,7 +171,7 @@ EOT;
 
 			// create letters row
 			for ($x = 'A'; $x < 'Z'; $x++) {
-				$screen .= '<a href="#' . $x . '" class="w3-button w3-black w3-circle"> ' . $x . '</a>' . ' - ';
+				$screen .= '<a href="#' . $x . '" class="w3-button w3-black w3-circle" style="margin: 2px 2px 2px 2px"> ' . $x . '</a>' . ' - ';
 			}
 			$screen .= '<a href="#Z" class="w3-button w3-black w3-circle">Z</a>';
 			$screen .= "</div><br />";
@@ -192,12 +192,12 @@ EOT;
 				}
 				$prior_letter = $current_letter;
 				$screen .= <<<EOT
-<p><button value="checkin:$patron->csbn_patron_email_address_key:$patron->ID:$parameter_string" class="w3-button w3-small w3-black">Checkin</button> $patron->post_title ($patron->csbn_patron_email_address_key)<br></p>
+<p class="w3-card"><button value="checkin:$patron->csbn_patron_email_address_key:$patron->ID:$parameter_string" class="w3-button w3-small w3-black">Checkin</button> $patron->post_title ($patron->csbn_patron_email_address_key)<br></p>
 EOT;
 			}
 
 			$screen .= '<p><form><a href="#header" class="w3-button w3-black">Back to Top</a></p>';
-			$screen .= '<hr><input type="text" id="fname" name="add_fname" placeholder="First Name"/> <input type="text" id="lname" name="add_lname" placeholder="Last Name"/> <input type="text" id="email" name="add_email" placeholder="Email"/><br />';
+			$screen .= '<hr><input class="w3-input" type="text" id="fname" name="add_fname" placeholder="First Name"/> <input class="w3-input" type="text" id="lname" name="add_lname" placeholder="Last Name"/> <input class="w3-input" type="text" id="email" name="add_email" placeholder="Email"/><br />';
 			$screen .= '<button id="addnew" class="w3-button w3-black">Add New</button></form>';
 			$screen .= "</div>";
 
