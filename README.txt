@@ -4,7 +4,7 @@ Donate link: https://kenneth.kitchen
 Tags: custom, events
 Requires at least: 5.0.0
 Tested up to: 5.2.2
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: Copyright 2019, KMD Enterprises, LLC
 License URI: https://kmde.us
 

@@ -40,8 +40,10 @@
                 type: 'POST',
                 data: formData,
                 async: true,
+				context: this,
                 success: function(data) {
-                    alert(data);
+					document.querySelector("button[value='" + $(this).attr('value') + "']").disabled = true;
+                    //alert(data);
                 },
                 cache: false,
                 contentType: false,
