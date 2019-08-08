@@ -192,7 +192,7 @@ EOT;
 				}
 				$prior_letter = $current_letter;
 				$screen .= <<<EOT
-<p class="w3-card"><button value="checkin:$patron->csbn_patron_email_address_key:$patron->ID:$parameter_string" class="w3-button w3-small w3-black">Checkin</button> $patron->post_title ($patron->csbn_patron_email_address_key)<br></p>
+<p class="w3-card"><button value="checkin:$patron->csbn_patron_email_address_key:$patron->ID:$parameter_string" class="w3-button w3-small w3-black csbn_button2">Checkin</button> $patron->post_title ($patron->csbn_patron_email_address_key)<br></p>
 EOT;
 			}
 
