@@ -20,7 +20,7 @@ if (!class_exists('Updraft_Manager_Updater_1_8')) {
 }
 
 try {
-	new \Updraft_Manager_Updater_1_8('https://kmde.network/support/', 1, 'csbn-events/csbn-events.php');
+	new \Updraft_Manager_Updater_1_8('https://kmde.network/support/', 2, 'csbn-events/csbn-events.php');
 } catch (Exception $e) {
 	error_log($e->getMessage().' at '.$e->getFile().' line '.$e->getLine());
 }
